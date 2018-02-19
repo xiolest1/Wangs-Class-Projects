@@ -1,0 +1,198 @@
+//NOT THE FINAL VERSION
+
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+using namespace std;
+
+const int x = 365;  //3 meals a day
+const int m = 3;
+int d;
+//uncomment for global time
+//int depart, arrive;
+static double meal[x][m][2];
+static double consemfee [x] [2];
+
+
+//prototypes
+void getParkingExpenses(double&,double&);
+void mealplan();
+void confees();
+
+int main(){
+	
+int days = 0;
+double parkingFee;
+double allowedParking;
+
+allowedParking = 6.00 * days;
+getParkingExpenses(parkingFee, allowedParking);
+	
+	
+	cout<<setprecision(2)<<fixed;
+   //example on how to set the number of days.
+   cout<<"Enter Number of days: ";
+   cin>>d;
+   //call to Function
+   confees();
+   //a test to see if it works (total paid)
+           double empl=0;
+           double comp=0;
+    for(int i=0;i<d;i++){
+        comp = comp+consemfee[i][1];
+        empl = empl+consemfee[i][2];
+    }
+    empl=empl-comp;
+        cout<<"Company: "<<comp<<endl;
+        cout<<"Employee: "<<empl<<endl;
+    //If you want to see how much employee paid vs how much company paid on any given day you can easily do that with this method.
+           int day=1;
+    for(int i=0;i<d;i++){
+        cout<<"On day "<<day<<" The Employer paid "<<consemfee[i][1]<<endl;
+        //The Employee pays what the employer does not, however in this case sem/con is completely covered by the employer, so employee will return 0
+        cout<<"On day "<<day<<" The Employee paid "<<consemfee[i][2]-consemfee[i][1]<<endl;;
+        day++;
+}
+	
+	
+	cout<<setprecision(2)<<fixed;
+    cout<<"Enter ammount of days: ";
+    cin>>d;
+    //uncomment for global time
+   //             cout<<"What time did you leave for the trip? (Military Time ex 1700): ";
+ //           cin>>depart;
+  //                      cout<<"What time did you get home? (Military Time ex 1700): "<<endl;
+   //         cin>>arrive;
+    mealplan();
+    system("PAUSE");
+	
+}
+
+void getParkingExpenses(double &parkingFee, double &allowedParking)
+
+{
+
+    int days;
+
+    
+
+       cout << "How much did you spend on parking?" << endl;
+
+       cin >> parkingFee;
+
+       
+
+       while (parkingFee < 0)
+
+       {
+
+             cout << "Error! Please enter a number above 0. Try again!" << endl;
+
+             cin >> parkingFee;
+
+       }
+
+       return;
+
+}
+void confees(){
+    char tf;
+    int day=1;
+        do{
+    cout<<"Were there any seminar/conference fees during the trip?(y/n)"<<endl;
+    cin>>tf;
+    if(tf=='n')
+        return;
+        else if(tf=='y'){
+    for(int i=0;i<d;i++){
+        cout<<"Please Enter seminar/conference fees for day "<<day<<endl;
+        cin>>consemfee[i][1];
+        //There is no limit to how much the company will pay for this section, therefore the first ROW in the array (what the company pays) is = to what the employee pays (Second row in array)
+        consemfee[i][2]=consemfee[i][1];
+        day++;
+    }
+    return;
+}
+}while(tf!='y' && tf!='n');
+}
+
+void mealplan(){
+    int depart, arrive, y=0, day=1;
+    for(int i=0;i<d;i++){
+        if(i==0){
+            //Maybe we should make arrival and departure time a global varibale so that we can display it. 
+            //comment next 2 for global time
+            cout<<"What time did you leave for the trip? (Military Time ex 1700): ";
+            cin>>depart;
+            if(depart<=700){
+                    cout<<"Day "<<day<<" Breakfast cost: ";
+                    //for clarification i=the current day | y=the current meal | 2=what employee pays while 1 represents what employer pays
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=9;
+                }else if(depart<=1200){
+                    cout<<"Sorry, Breakfast on the first day only applicable if before 0700 "<<endl;
+                    cout<<"Day "<<day<<" Lunch cost: ";
+                    y++;
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=12;
+                    y++;
+                    cout<<"Day "<<day<<" Dinner cost: ";
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=16;
+                    day++;
+                    i++;
+                }else if(depart<=1800){
+                    cout<<"Sorry, Lunch on the first day only applicable if before 1200 "<<endl;
+                    y++;
+                    cout<<"Day "<<day<<" Dinner cost: ";
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=16;
+                    day++;
+                    i++;
+                }else{
+                cout<<"Sorry, Food on the first day only applicable if before 1800 "<<endl;
+                day++;
+                i++;
+            }
+        }
+        y=0;
+        if(day!=1 && i!=0){
+        cout<<"Day "<<day<<" Breakfast cost: ";
+        cin>>meal[i][y][1];
+        meal[i][y][2]=9;
+    }
+        y++;
+        cout<<"Day "<<day<<" Lunch cost: ";
+        cin>>meal[i][y][1];
+        meal[i][y][2]=12;
+        y++;
+        cout<<"Day "<<day<<" Dinner cost: ";
+        cin>>meal[i][y][1];
+        meal[i][y][2]=16;
+        day++;
+        if(i==d-2){
+            //comment next 2 for global time
+            cout<<"What time did you get home? (Military Time ex 1700): "<<endl;
+            cin>>arrive;
+            if(arrive>800){
+                    y=0;
+                    cout<<"Day "<<day<<" Breakfast cost: ";
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=9;
+            }if(arrive>1300){
+                    y=1;
+                    cout<<"Day "<<day<<" Lunch cost: ";
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=12;
+            }if(arrive>1900){
+                    y=2;
+                    cout<<"Day "<<day<<" Dinner cost: ";
+                    cin>>meal[i][y][1];
+                    meal[i][y][2]=16;
+                        i++;
+            }else
+            i++;
+        }
+    }
+}
+
